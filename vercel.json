@@ -1,7 +1,9 @@
 {
   "cleanUrls": true,
-  "frameworks": null,
-  "buildCommand": null,
-  "installCommand": null,
-  "outputDirectory": "."
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ]
 }

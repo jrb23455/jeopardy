@@ -4,111 +4,417 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sales Training Jeopardy</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Merriweather:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 <style>
+:root{
+  --navy:#0d1f4e;
+  --navy2:#1a3a8f;
+  --navy3:#2a4fbb;
+  --gold:#f5c518;
+  --gold2:#e6b800;
+  --gold3:#fff0a0;
+  --dark:#07090f;
+  --surface:#111827;
+  --surface2:#1a2035;
+  --surface3:#232b42;
+  --border:#2a3350;
+  --text:#e8eaf0;
+  --muted:#6b7a99;
+  --success:#22c55e;
+  --danger:#ef4444;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f1117;color:#e8e8e8;min-height:100vh}
-#app{max-width:960px;margin:0 auto;padding:20px 16px 60px}
+html{height:100%}
+body{
+  font-family:'Lato',sans-serif;
+  background:var(--dark);
+  color:var(--text);
+  min-height:100vh;
+  background-image:radial-gradient(ellipse at 20% 20%, #0d1f4e22 0%, transparent 60%),
+                   radial-gradient(ellipse at 80% 80%, #1a3a8f11 0%, transparent 60%);
+}
+#app{max-width:1020px;margin:0 auto;padding:24px 20px 80px}
 .screen{display:none}.screen.active{display:block}
-.hdr{text-align:center;padding:24px 0 28px}
-.hdr h1{font-size:32px;font-weight:700;color:#f5c518;letter-spacing:-.02em;font-family:Georgia,serif}
-.hdr p{font-size:15px;color:#999;margin-top:6px}
-.lbl{font-size:11px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;margin-top:18px}
-.card{background:#1a1d27;border:1px solid #2a2d3a;border-radius:12px;padding:14px 16px;margin-bottom:10px}
-.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-.row:last-child{margin-bottom:0}
-input[type=text]{flex:1;border-radius:8px;border:1px solid #333;padding:8px 10px;font-size:14px;background:#111318;color:#e8e8e8}
-.color-dot{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;flex-shrink:0;transition:border-color .15s}
-.color-dot.sel{border-color:#fff}
-.rm-btn{background:none;border:none;color:#555;cursor:pointer;font-size:20px;padding:0 4px;line-height:1}
-.rm-btn:hover{color:#f87171}
-.add-team-btn{width:100%;padding:9px;border-radius:8px;border:1px dashed #333;background:transparent;color:#666;font-size:13px;cursor:pointer;margin-top:4px;margin-bottom:4px}
-.add-team-btn:hover{background:#1a1d27;color:#ccc}
-.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:14px}
-.cat-card{background:#1a1d27;border:1.5px solid #2a2d3a;border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;user-select:none}
-.cat-card:hover{border-color:#3a4070;background:#1e2135}
-.cat-card.sel{border-color:#f5c518;background:#1f1c0a}
-.cat-card.sel .cn{color:#f5c518}
-.ci{font-size:20px;margin-bottom:5px}.cn{font-size:12px;font-weight:600;color:#d0d0d0;line-height:1.3}.cq{font-size:11px;color:#555;margin-top:2px}
-.sel-info{font-size:13px;color:#777;margin-bottom:10px}
-.sel-info strong{color:#e0e0e0}
-.start-btn{width:100%;padding:13px;border-radius:10px;border:none;background:#f5c518;color:#0f0f0f;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px}
-.start-btn:disabled{opacity:.3;cursor:not-allowed}
-.scoreboard{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.team-score{border-radius:10px;padding:8px 12px;text-align:center;min-width:84px}
-.ts-name{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:96px}
-.ts-val{font-size:20px;font-weight:700;margin-top:2px;font-family:Georgia,serif}
-.board-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
-.finish-btn{padding:7px 14px;border-radius:8px;border:1px solid #333;background:#1a1d27;color:#888;font-size:13px;cursor:pointer}
-.finish-btn:hover{color:#ccc;border-color:#444}
-.jboard{display:grid;gap:4px}
-.col-hdr{background:#1a3a8f;color:#e8eeff;border-radius:8px;padding:10px 6px;text-align:center;font-size:11px;font-weight:600;line-height:1.3;min-height:54px;display:flex;align-items:center;justify-content:center;text-transform:uppercase;letter-spacing:.04em}
-.cell{background:#1a3a8f;color:#f5c518;border-radius:8px;padding:6px 3px;text-align:center;font-size:20px;font-weight:700;cursor:pointer;min-height:54px;display:flex;align-items:center;justify-content:center;border:2px solid transparent;transition:all .12s;font-family:Georgia,serif}
-.cell:hover:not(.used){background:#2a4fbb;border-color:#f5c518;transform:scale(1.02)}
-.cell.used{background:#12141a;color:#2a2d3a;cursor:default}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
+
+/* ── SETUP SCREEN ─────────────────────────────── */
+.setup-hero{text-align:center;padding:32px 0 36px;position:relative}
+.setup-hero::after{content:'';display:block;width:80px;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:16px auto 0;border-radius:2px}
+.setup-hero h1{
+  font-family:'Merriweather',Georgia,serif;
+  font-size:38px;font-weight:700;
+  background:linear-gradient(135deg,#f5c518 0%,#ffe566 50%,#c9960a 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:-.01em;line-height:1.15;
+}
+.setup-hero p{font-size:15px;color:var(--muted);margin-top:10px;letter-spacing:.02em}
+
+.section-label{
+  font-size:10px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.14em;
+  margin-bottom:10px;margin-top:22px;
+  display:flex;align-items:center;gap:8px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Team cards */
+.team-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:14px;padding:14px 16px;margin-bottom:10px;
+  transition:border-color .2s;
+}
+.team-card:hover{border-color:#3a4a6a}
+.t-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.t-row:last-child{margin-bottom:0}
+.team-input{
+  flex:1;border-radius:8px;border:1px solid var(--border);
+  padding:9px 12px;font-size:14px;font-family:'Lato',sans-serif;
+  background:#0d1120;color:var(--text);outline:none;transition:border-color .2s;
+}
+.team-input:focus{border-color:var(--gold)}
+.color-dot{
+  width:26px;height:26px;border-radius:50%;cursor:pointer;
+  border:2.5px solid transparent;flex-shrink:0;transition:all .15s;
+}
+.color-dot.sel{border-color:#fff;transform:scale(1.15)}
+.rm-btn{
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:20px;padding:0 4px;line-height:1;transition:color .15s;
+}
+.rm-btn:hover{color:var(--danger)}
+.add-team-btn{
+  width:100%;padding:10px;border-radius:10px;
+  border:1.5px dashed var(--border);background:transparent;
+  color:var(--muted);font-size:13px;font-family:'Lato',sans-serif;
+  cursor:pointer;transition:all .2s;margin-top:2px;margin-bottom:2px;
+}
+.add-team-btn:hover{border-color:#4a5a7a;color:var(--text);background:var(--surface2)}
+
+/* Category grid */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px;margin-bottom:16px}
+.cat-card{
+  background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:12px;padding:14px;cursor:pointer;
+  transition:all .18s;user-select:none;position:relative;overflow:hidden;
+}
+.cat-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent,transparent);
+  transition:background .2s;border-radius:12px;
+  z-index:0;pointer-events:none;
+}
+.cat-card>*{position:relative;z-index:1}
+.cat-card:hover{border-color:#4a5a8a;transform:translateY(-1px);box-shadow:0 4px 16px #0005}
+.cat-card:hover::before{background:linear-gradient(135deg,#1a3a8f18,transparent)}
+.cat-card.sel{border-color:var(--gold);background:linear-gradient(135deg,#2a1f05,#1a1500)}
+.cat-card.sel .cn{color:var(--gold)}
+.cat-card.sel::after{
+  content:'✓';position:absolute;top:8px;right:10px;
+  font-size:12px;color:var(--gold);font-weight:700;
+}
+.ci{font-size:22px;margin-bottom:6px}
+.cn{font-size:12px;font-weight:700;color:#c8cfe0;line-height:1.3;letter-spacing:.01em}
+
+.sel-info{font-size:13px;color:var(--muted);margin-bottom:12px;text-align:center}
+.sel-info strong{color:var(--text)}
+.start-btn{
+  width:100%;padding:15px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,#f5c518,#e6a800);
+  color:#0a0700;font-size:16px;font-weight:900;
+  font-family:'Lato',sans-serif;cursor:pointer;
+  letter-spacing:.04em;text-transform:uppercase;
+  transition:all .2s;box-shadow:0 4px 20px #f5c51840;
+  margin-top:6px;
+}
+.start-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 28px #f5c51860}
+.start-btn:disabled{opacity:.3;cursor:not-allowed;box-shadow:none}
+
+/* ── BOARD SCREEN ─────────────────────────────── */
+.board-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;flex-wrap:wrap;gap:8px;
+  padding:10px 14px;background:var(--surface2);
+  border-radius:14px;border:1px solid var(--border);
+}
+.scoreboard{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.team-pill{
+  border-radius:30px;padding:6px 14px;
+  display:flex;align-items:center;gap:8px;
+  border:1.5px solid;transition:all .3s;
+}
+.tp-name{font-size:11px;font-weight:700;letter-spacing:.05em}
+.tp-score{font-size:18px;font-weight:900;font-family:'Merriweather',Georgia,serif}
+.finish-btn{
+  padding:8px 16px;border-radius:8px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--muted);font-size:12px;font-family:'Lato',sans-serif;
+  cursor:pointer;transition:all .2s;letter-spacing:.04em;
+}
+.finish-btn:hover{color:var(--text);border-color:#4a5a7a}
+
+/* Board grid */
+.jboard{display:grid;gap:5px}
+.col-hdr{
+  background:linear-gradient(180deg,#1e4db7,#1a3a8f);
+  color:#c8d8ff;border-radius:10px;padding:10px 6px;
+  text-align:center;font-size:10px;font-weight:700;
+  line-height:1.3;min-height:58px;display:flex;
+  align-items:center;justify-content:center;
+  text-transform:uppercase;letter-spacing:.08em;
+  border:1px solid #2a4fbb44;
+  box-shadow:inset 0 1px 0 #ffffff18;
+}
+.cell{
+  background:linear-gradient(180deg,#1e4db7,#1a3a8f);
+  color:var(--gold);border-radius:10px;padding:6px 3px;
+  text-align:center;font-size:22px;font-weight:900;
+  cursor:pointer;min-height:56px;display:flex;
+  align-items:center;justify-content:center;
+  border:1px solid #2a4fbb44;
+  transition:all .15s;font-family:'Merriweather',Georgia,serif;
+  box-shadow:inset 0 1px 0 #ffffff18;
+  position:relative;overflow:hidden;
+}
+.cell::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,#ffffff12,transparent 50%);
+  border-radius:10px;
+}
+.cell:hover:not(.used){
+  background:linear-gradient(180deg,#2a5fd4,#2248c0);
+  border-color:var(--gold);
+  transform:scale(1.03);
+  box-shadow:0 4px 20px #f5c51830, inset 0 1px 0 #ffffff22;
+  color:#ffe566;
+}
+.cell.used{
+  background:var(--surface);color:var(--border);
+  cursor:default;box-shadow:none;border-color:var(--border);
+}
+.cell.used::before{display:none}
+.cell-check{font-size:18px;color:#2a3a55}
+
+/* ── MODAL ────────────────────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.88);
+  display:flex;align-items:center;justify-content:center;
+  z-index:100;padding:20px;
+  backdrop-filter:blur(4px);
+}
 .modal-overlay.hidden{display:none}
-.modal-box{background:#1a1d27;border-radius:16px;border:1px solid #2a2d3a;max-width:620px;width:100%;padding:28px;max-height:90vh;overflow-y:auto}
-.m-cat{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px}
-.m-val{font-size:13px;color:#555;margin-bottom:20px;font-weight:500}
-.m-clue-box{background:#1a3a8f;border-radius:12px;padding:24px 20px;margin-bottom:22px;text-align:center}
-.m-clue{font-size:20px;font-weight:600;color:#fff;line-height:1.55;font-family:Georgia,serif;text-transform:uppercase;letter-spacing:.02em}
-.ans-box{background:#0f1117;border-radius:10px;border:1px solid #2a2d3a;padding:16px;margin-bottom:16px}
-.ans-lbl{font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
-.ans-txt{font-size:24px;font-weight:700;color:#f5c518;line-height:1.3;font-family:Georgia,serif;font-style:italic}
-.modal-actions{display:flex;gap:8px}
-.m-btn{flex:1;padding:11px;border-radius:10px;border:1px solid #333;background:#111318;color:#888;font-size:14px;cursor:pointer;transition:all .15s}
-.m-btn:hover{color:#ccc;border-color:#444}
-.m-btn.primary{background:#f5c518;color:#0f0f0f;border-color:#f5c518;font-weight:700}
-.m-btn.primary:hover{background:#e6b800}
-.team-award-grid{display:grid;gap:7px;margin-bottom:10px}
-.award-btn{padding:11px 14px;border-radius:10px;border:1px solid #2a2d3a;background:#111318;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .12s}
-.award-btn:hover{border-color:#f5c518;background:#1f1c0a}
-.award-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
-.award-name{font-size:14px;color:#e0e0e0;font-weight:500;flex:1;text-align:left}
-.award-score{font-size:13px;color:#666}
-.wrong-btn{width:100%;padding:10px;border-radius:10px;border:1px solid #4a1a1a;background:#2a0e0e;color:#f87171;font-size:13px;cursor:pointer;margin-bottom:7px}
-.skip-btn{width:100%;padding:10px;border-radius:10px;border:1px solid #333;background:#111318;color:#666;font-size:13px;cursor:pointer}
-.podium{display:flex;justify-content:center;gap:10px;align-items:flex-end;margin:16px 0 20px;padding:0 8px}
-.pod{text-align:center;flex:1;max-width:130px}
-.pod-bar{border-radius:8px 8px 0 0;display:flex;align-items:flex-end;justify-content:center;padding:8px 4px}
-.pod-rank{font-size:20px;font-weight:700;color:#fff}
-.pod-name{font-size:12px;color:#ccc;margin-top:6px;font-weight:600;word-break:break-word}
-.pod-pts{font-size:13px;color:#666;margin-top:2px}
-.play-again{width:100%;padding:13px;border-radius:10px;border:none;background:#f5c518;color:#0f0f0f;font-size:16px;font-weight:700;cursor:pointer;margin-top:16px}
-.play-again:hover{opacity:.9}
-.award-section-lbl{font-size:12px;color:#555;margin-bottom:8px;font-weight:500}
+.modal-box{
+  background:linear-gradient(160deg,#141a2e,#0f1525);
+  border-radius:20px;
+  border:1px solid #2a3a5a;
+  max-width:660px;width:100%;
+  padding:32px;max-height:90vh;overflow-y:auto;
+  box-shadow:0 24px 80px #00000088;
+}
+.m-meta{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.m-cat-badge{
+  font-size:10px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.14em;
+  background:var(--surface3);border:1px solid var(--border);
+  padding:4px 10px;border-radius:20px;
+}
+.m-val-badge{
+  font-size:13px;font-weight:900;color:var(--gold);
+  font-family:'Merriweather',Georgia,serif;
+  background:linear-gradient(135deg,#2a1f05,#1a1200);
+  border:1px solid #f5c51840;
+  padding:4px 12px;border-radius:20px;
+}
+
+.m-clue-box{
+  background:linear-gradient(160deg,#1a3a8f,#1230700);
+  background:linear-gradient(160deg,#1b3d96,#122870);
+  border-radius:16px;padding:28px 24px;
+  margin-bottom:24px;text-align:center;
+  border:1px solid #2a4fbb66;
+  box-shadow:inset 0 1px 0 #ffffff12;
+}
+.m-clue{
+  font-size:19px;font-weight:400;color:#fff;
+  line-height:1.6;font-family:'Merriweather',Georgia,serif;
+  font-style:italic;
+}
+
+.ans-reveal{
+  background:linear-gradient(160deg,#1a1200,#120d00);
+  border-radius:14px;border:1px solid #f5c51830;
+  padding:18px 20px;margin-bottom:20px;
+  animation:fadeIn .3s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.ans-lbl{
+  font-size:9px;font-weight:700;color:var(--gold);
+  text-transform:uppercase;letter-spacing:.16em;margin-bottom:10px;
+  opacity:.7;
+}
+.ans-txt{
+  font-size:22px;font-weight:700;color:var(--gold);
+  line-height:1.4;font-family:'Merriweather',Georgia,serif;
+}
+
+.modal-actions{display:flex;gap:8px;margin-top:4px}
+.m-btn{
+  flex:1;padding:12px;border-radius:10px;
+  border:1px solid var(--border);background:var(--surface2);
+  color:var(--muted);font-size:14px;font-family:'Lato',sans-serif;
+  cursor:pointer;transition:all .18s;font-weight:600;
+}
+.m-btn:hover{color:var(--text);border-color:#4a5a7a;background:var(--surface3)}
+.m-btn.primary{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#0a0700;border-color:transparent;font-weight:900;
+  letter-spacing:.03em;
+}
+.m-btn.primary:hover{background:linear-gradient(135deg,#ffe566,#f5c518);transform:translateY(-1px)}
+
+.award-section-lbl{
+  font-size:11px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:10px;margin-top:4px;
+}
+.team-award-grid{display:grid;gap:7px;margin-bottom:12px}
+.award-btn{
+  padding:12px 16px;border-radius:12px;
+  border:1px solid var(--border);background:var(--surface2);
+  cursor:pointer;display:flex;align-items:center;gap:12px;
+  transition:all .18s;
+}
+.award-btn:hover{border-color:var(--gold);background:linear-gradient(135deg,#2a1f05,#1a1500);transform:translateY(-1px)}
+.award-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;box-shadow:0 0 6px currentColor}
+.award-name{font-size:14px;color:var(--text);font-weight:700;flex:1;text-align:left}
+.award-score{font-size:13px;color:var(--muted);font-family:'Merriweather',Georgia,serif}
+
+.wrong-btn{
+  width:100%;padding:11px;border-radius:10px;
+  border:1px solid #ef444430;background:#ef44440a;
+  color:#f87171;font-size:13px;font-family:'Lato',sans-serif;
+  cursor:pointer;margin-bottom:8px;transition:all .18s;font-weight:600;
+}
+.wrong-btn:hover{background:#ef44441a;border-color:#ef444460}
+.skip-btn{
+  width:100%;padding:11px;border-radius:10px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--muted);font-size:13px;font-family:'Lato',sans-serif;
+  cursor:pointer;transition:all .18s;
+}
+.skip-btn:hover{color:var(--text);background:var(--surface2)}
+
+/* ── RESULTS SCREEN ────────────────────────────── */
+.results-hero{text-align:center;padding:28px 0 20px}
+.results-hero h1{
+  font-family:'Merriweather',Georgia,serif;
+  font-size:32px;font-weight:700;color:var(--gold);
+}
+.results-hero p{font-size:14px;color:var(--muted);margin-top:8px}
+
+.podium-wrap{
+  display:flex;justify-content:center;align-items:flex-end;
+  gap:8px;margin:24px 0;padding:0 16px 0;
+}
+.pod{text-align:center;flex:1;max-width:150px}
+.pod-platform{
+  border-radius:10px 10px 0 0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end;
+  padding:12px 8px 10px;
+  position:relative;
+  box-shadow:0 -2px 20px #00000044;
+}
+.pod-rank-num{
+  font-size:28px;font-weight:900;color:rgba(255,255,255,.9);
+  font-family:'Merriweather',Georgia,serif;line-height:1;margin-bottom:2px;
+}
+.pod-rank-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase}
+.pod-name{
+  font-size:13px;color:var(--text);margin-top:10px;
+  font-weight:700;word-break:break-word;line-height:1.3;
+}
+.pod-score{font-size:14px;color:var(--muted);margin-top:4px;font-family:'Merriweather',Georgia,serif}
+
+.results-list{display:grid;gap:8px;margin-top:16px}
+.result-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;transition:border-color .2s;
+}
+.result-row:hover{border-color:#3a4a6a}
+.result-rank{font-size:12px;color:var(--muted);font-weight:700;width:24px}
+.result-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+.result-name{flex:1;font-size:15px;color:var(--text);font-weight:700}
+.result-score{font-size:16px;font-weight:900;font-family:'Merriweather',Georgia,serif}
+
+.play-again{
+  width:100%;padding:15px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#0a0700;font-size:16px;font-weight:900;
+  font-family:'Lato',sans-serif;cursor:pointer;
+  letter-spacing:.04em;text-transform:uppercase;
+  transition:all .2s;box-shadow:0 4px 20px #f5c51840;
+  margin-top:20px;
+}
+.play-again:hover{transform:translateY(-1px);box-shadow:0 6px 28px #f5c51860}
+
+/* Score change animation */
+.score-bump{animation:bump .4s ease}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+
+/* Confetti canvas */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:200}
 </style>
 </head>
 <body>
+<canvas id="confetti"></canvas>
 <div id="app">
+
+<!-- SETUP -->
 <div class="screen active" id="s-setup">
-  <div class="hdr"><h1>Sales Training Jeopardy</h1><p>Personal lines insurance — pick 5 or 6 categories</p></div>
-  <div class="lbl">Teams</div>
+  <div class="setup-hero">
+    <h1>Sales Training Jeopardy</h1>
+    <p>Personal lines insurance — select 5 or 6 categories to build your board</p>
+  </div>
+  <div class="section-label">Teams</div>
   <div id="teams-list"></div>
-  <button class="add-team-btn" onclick="addTeam()">+ Add team</button>
-  <div class="lbl">Categories</div>
+  <button class="add-team-btn" onclick="addTeam()">+ Add a team</button>
+  <div class="section-label">Categories</div>
   <div class="cat-grid" id="cat-grid"></div>
   <p class="sel-info" id="sel-info">Select 5 or 6 categories to start</p>
   <button class="start-btn" id="start-btn" disabled onclick="startGame()">Start game</button>
 </div>
+
+<!-- BOARD -->
 <div class="screen" id="s-board">
-  <div class="board-top">
+  <div class="board-header">
     <div class="scoreboard" id="scoreboard"></div>
-    <button class="finish-btn" onclick="endGame()">Finish game</button>
+    <button class="finish-btn" onclick="endGame()">End game</button>
   </div>
   <div class="jboard" id="board"></div>
 </div>
+
+<!-- RESULTS -->
 <div class="screen" id="s-results">
-  <div class="hdr"><h1>Game over</h1></div>
-  <div class="podium" id="podium"></div>
-  <div id="results-table"></div>
+  <div class="results-hero">
+    <h1>🏆 Final Results</h1>
+    <p id="results-subtitle"></p>
+  </div>
+  <div class="podium-wrap" id="podium"></div>
+  <div class="results-list" id="results-table"></div>
   <button class="play-again" onclick="playAgain()">Play again</button>
 </div>
+
 </div>
+
+<!-- MODAL -->
 <div class="modal-overlay hidden" id="modal">
   <div class="modal-box" id="modal-box"></div>
 </div>
+
 <script>
+
 const COLORS=['#378ADD','#1D9E75','#D85A30','#D4537E','#7F77DD','#BA7517','#E24B4A','#085041'];
 
 // Each category has exactly 5 clues, one per value tier.
@@ -117,187 +423,374 @@ const COLORS=['#378ADD','#1D9E75','#D85A30','#D4537E','#7F77DD','#BA7517','#E24B
 
 const BANKS={
 "Auto Coverages":{icon:"🚗",qs:[
-[100,"The physical damage coverage that pays when your car strikes another vehicle or a stationary object.","What is collision?"],
-[200,"This coverage pays for damage to your vehicle caused by theft, fire, hail, or a deer strike — anything except a collision.","What is comprehensive?"],
-[300,"In no-fault states, this coverage pays your own medical bills after an accident regardless of who caused it.","What is PIP?"],
-[400,"This coverage steps in when the at-fault driver carries no insurance — or not enough to cover your damages.","What is uninsured/underinsured motorist?"],
-[500,"A customer rear-ends another driver, injuring the passenger. Their bodily injury limit is $50,000 per person but the injured party's medical bills and lost wages total $140,000. The two policies that could be exposed to pay the remaining $90,000.","What are the customer's umbrella policy and their own personal assets?"]
+[100,"This coverage pays to repair your own car after you strike another vehicle or a guardrail.","What is collision?"],
+[100,"Theft, fire, hail, and hitting a deer are all paid under this 'other than collision' coverage.","What is comprehensive?"],
+[100,"This coverage pays for damage you cause to another person's car when you're at fault.","What is property damage liability?"],
+[100,"A cracked windshield from a flying rock falls under this coverage.","What is comprehensive?"],
+[200,"In no-fault states, this coverage pays your own medical bills no matter who caused the accident.","What is PIP?"],
+[200,"This coverage pays your medical bills after an accident regardless of fault, even in at-fault states.","What is medical payments?"],
+[200,"This pays for a rental car while yours is in the shop after a covered claim.","What is rental reimbursement?"],
+[200,"Hitting a pothole and bending your suspension is paid under this coverage.","What is collision?"],
+[300,"When the driver who hit you has no insurance, this coverage on your own policy pays.","What is uninsured motorist?"],
+[300,"This pays the difference between what you owe on your loan and what your totaled car is worth.","What is GAP coverage?"],
+[300,"Driving for Uber or Lyft requires this specific endorsement on a personal auto policy.","What is rideshare coverage?"],
+[300,"This court-ordered document proves financial responsibility after a serious violation.","What is an SR-22?"],
+[400,"This coverage steps in when the at-fault driver has insurance, but not enough to cover your injuries.","What is underinsured motorist?"],
+[400,"In a 100/300/50 split limit, this is what the '50' represents.","What is property damage liability?"],
+[400,"Someone who needs to drive but doesn't own a car buys this type of policy.","What is a non-owner policy?"],
+[500,"You owe $25,000 on a car the insurer values at $18,000 when it's totaled — this optional coverage pays the $7,000 difference.","What is GAP coverage?"],
+[500,"In a 100/300/50 split limit, this is the total an insurer will pay for all bodily injuries in one accident.","What is $300,000?"],
 ]},
 "Homeowners Insurance":{icon:"🏠",qs:[
-[100,"The homeowners coverage section that pays to rebuild the physical structure of your home after a covered loss.","What is Coverage A?"],
-[200,"The standard homeowners form number that covers the dwelling on an open-perils basis and personal property on a named-perils basis.","What is HO-3?"],
-[300,"This peril is excluded from all standard homeowners policies — homeowners must purchase it as a separate policy.","What is flood?"],
-[400,"The key difference between replacement cost and ACV settlements is that ACV subtracts this from the claim payment.","What is depreciation?"],
-[500,"A customer's home is destroyed by fire. Their dwelling is insured for $280,000 but it costs $410,000 to rebuild. The underwriting concept that describes this gap — and why agents should proactively review coverage limits at every annual review.","What is being underinsured — and why replacement cost valuation matters?"]
+[100,"This coverage section pays to rebuild the physical structure of your house after a covered loss.","What is Coverage A, or dwelling?"],
+[100,"Detached structures like fences, sheds, and a standalone garage are covered under this section.","What is other structures?"],
+[100,"Your furniture, clothing, and electronics inside the home are covered under this section.","What is personal property?"],
+[100,"This pays for hotel stays and meals when your home is uninhabitable after a covered loss.","What is loss of use?"],
+[200,"It's the standard homeowners form number, covering the dwelling on an open-perils basis.","What is HO-3?"],
+[200,"This coverage pays if a guest is injured on your property and sues you.","What is personal liability?"],
+[200,"This small coverage pays a guest's minor medical bills without a lawsuit, as a goodwill gesture.","What is medical payments?"],
+[200,"This endorsement covers damage from a sewer or drain backing up into the home.","What is water backup?"],
+[300,"Excluded from every standard homeowners policy, this peril requires a separate FEMA-backed policy.","What is flood?"],
+[300,"This peril is excluded in places like California and needs its own separate policy.","What is earthquake?"],
+[300,"A swimming pool or trampoline creates this liability hazard for a homeowner.","What is an attractive nuisance?"],
+[300,"This endorsement raises coverage on high-value jewelry, furs, or fine art beyond standard sublimits.","What is scheduled personal property?"],
+[400,"Replacement cost pays to rebuild new — this older settlement method subtracts depreciation first.","What is actual cash value?"],
+[400,"This coverage helps pay the extra cost to rebuild to current building codes after a loss.","What is ordinance or law?"],
+[400,"A slow, repeated water seepage that rots a subfloor over years is denied as this kind of problem.","What is a maintenance issue?"],
+[500,"A home insured for $280,000 costs $410,000 to rebuild after a fire — this one-word condition describes the dangerous gap.","What is underinsurance?"],
+[500,"A 3-year-old $1,200 laptop, depreciated 40%, on an ACV policy with a $500 deductible nets the owner this amount.","What is $220?"],
 ]},
-"Renters and Condo":{icon:"🏢",qs:[
-[100,"A landlord's policy covers the building structure — renters insurance covers this for the tenant.","What is personal property?"],
-[200,"A fire forces a renter out of their apartment for six weeks. The coverage that pays their hotel bills and meals during that time.","What is loss of use?"],
-[300,"The gap in a condo owner's coverage that the HOA master policy leaves behind — because the HOA only covers the building shell, not this.","What are interior improvements and betterments?"],
-[400,"A renter hosts a dinner party. A guest trips over a rug and breaks their wrist. The renters insurance coverage that pays the guest's medical bills and legal fees if they sue.","What is liability coverage?"],
-[500,"A condo owner's HOA master policy is a 'bare walls in' policy. A pipe bursts inside the wall and floods the unit, destroying the owner's custom flooring, cabinets, and appliances. The two coverages in the owner's HO-6 that respond — and why both matter.","What are improvements and betterments, and personal property coverage?"]
+"Renters Insurance":{icon:"🛋️",qs:[
+[100,"This is the standard policy form number for renters insurance.","What is HO-4?"],
+[100,"Renters insurance covers the tenant's belongings, but never this.","What is the building itself?"],
+[100,"A stolen laptop, a wrecked couch, and ruined clothes after a fire fall under this coverage.","What is personal property?"],
+[200,"After an apartment fire forces a renter out, this coverage pays for them to stay elsewhere.","What is loss of use?"],
+[200,"This coverage protects a renter if their dog bites someone at the park.","What is personal liability?"],
+[200,"If a guest trips over a rug in your apartment, this coverage pays their minor medical bills.","What is medical payments?"],
+[300,"A property management company usually requires this document before a tenant moves in.","What is proof of insurance?"],
+[300,"A landlord is added to a renters policy under this status so they're notified of cancellation.","What is an interested party?"],
+[300,"Adding this to a renters policy raises the limit on an engagement ring beyond the standard cap.","What is scheduled personal property?"],
+[400,"If a renter accidentally starts a fire that damages the building, this coverage responds to the landlord's claim.","What is liability?"],
+[400,"Upgrading from ACV to this ensures a stolen TV is replaced with a brand-new one.","What is replacement cost?"],
+[500,"A renter's policy typically still covers their belongings stolen from this location away from home.","What is their car?"],
+[500,"Bundled with auto, the multi-policy discount often offsets nearly this share of a renters premium.","What is all, or most, of it?"],
 ]},
-"Life and Umbrella":{icon:"☂️",qs:[
-[100,"Life insurance that covers a fixed number of years and builds no cash value.","What is term life?"],
-[200,"Unlike term life, this type of permanent life insurance accumulates a cash value the policyholder can borrow against.","What is whole life?"],
-[300,"This type of permanent life insurance allows the policyholder to adjust both the premium amount and the death benefit over time as financial needs change.","What is universal life?"],
-[400,"A customer with $500,000 in home liability and a $1 million umbrella is sued for $1.6 million after a serious accident. The dollar amount they are personally exposed for out of pocket — assuming no other policies apply.","What is $100,000?"],
-[500,"A customer has a $1 million umbrella policy. They are sued for $1.4 million after a serious auto accident. Their auto liability limit is $100,000 and their umbrella limit is $1 million. The dollar amount they are personally exposed to pay out of pocket — and the product that would have prevented it.","What is $300,000 — and a higher umbrella limit?"]
+"Condo Insurance":{icon:"🏙️",qs:[
+[100,"This is the standard policy form number for a condominium unit owner.","What is HO-6?"],
+[100,"The condo association's insurance policy is commonly called this.","What is the master policy?"],
+[100,"A condo owner's furniture, clothing, and electronics are covered under this.","What is personal property?"],
+[200,"This master policy type covers only the bare building shell, leaving the unit interior to the owner.","What is bare walls?"],
+[200,"This master policy type covers the building and the original fixtures inside each unit.","What is all-in?"],
+[200,"After a fire makes a condo unlivable, this coverage pays for the owner to stay elsewhere.","What is loss of use?"],
+[300,"This HO-6 coverage pays for the unit's drywall, flooring, cabinets, and owner-installed upgrades.","What is dwelling coverage?"],
+[300,"This party sets the minimum insurance requirements that a condo owner must carry.","What is the HOA?"],
+[400,"When the HOA bills every owner to cover a shortfall after a big claim, this coverage pays the owner's share.","What is loss assessment?"],
+[400,"Kitchen upgrades a condo owner installed themselves are insured under this part of the HO-6.","What is dwelling coverage?"],
+[500,"Loss assessment coverage most commonly steps in to pay an owner's share of this specific master-policy cost.","What is the master policy deductible?"],
+[500,"The single number that most directly drives a condo owner's HO-6 premium is this interior figure.","What is the dwelling limit?"],
+]},
+"Umbrella Insurance":{icon:"☂️",qs:[
+[100,"This policy sits on top of your auto and home liability and kicks in after those limits run out.","What is umbrella insurance?"],
+[100,"The coverage amount a personal umbrella policy typically starts at.","What is one million dollars?"],
+[200,"Homeowners with pools, trampolines, or dogs are prime candidates for this extra-liability policy.","What is umbrella?"],
+[200,"An umbrella requires the customer to carry these minimum amounts on the underlying auto and home first.","What are underlying limits?"],
+[300,"Before an umbrella pays, this underlying coverage must be exhausted on the loss.","What is the underlying liability?"],
+[300,"Adding a teenage driver sharply raises liability risk, making this product an easy recommendation.","What is umbrella?"],
+[400,"A customer is sued for $900,000 after an at-fault accident. With $300,000 in auto liability, the umbrella covers this amount.","What is $600,000?"],
+[400,"Beyond lawsuits, an umbrella can also cover these damage claims that auto and home liability often limit.","What are libel and slander?"],
+[500,"With $300,000 in auto liability and a $1 million umbrella, a $1.5 million judgment leaves the customer owing this out of pocket.","What is $200,000?"],
+[500,"An umbrella generally will not pay for this kind of loss — harm the insured caused on purpose.","What is intentional injury or damage?"],
+]},
+"Landlord & Rental":{icon:"🔑",qs:[
+[100,"A policy for a property rented out to others commonly uses this form number.","What is DP-3?"],
+[100,"A landlord policy covers the building, but never this person's belongings.","What is the tenant's?"],
+[200,"This coverage reimburses a landlord for lost rent after a covered fire makes the unit unrentable.","What is fair rental value?"],
+[200,"This covers a landlord sued when a tenant trips on a broken stair.","What is premises liability?"],
+[300,"This basic landlord form covers only named perils and settles roof claims at actual cash value.","What is DP-1?"],
+[300,"Landlords should require tenants to carry this to shift liability risk off the landlord's policy.","What is renters insurance?"],
+[400,"A standard landlord policy may suspend coverage once a property has been this for 30 days or more.","What is vacant?"],
+[400,"When a landlord owns a property through an LLC, the LLC must be listed as this on the policy.","What is the named insured?"],
+[500,"A landlord renting the property on Airbnb has a gap, because a standard DP-3 excludes this use.","What is short-term rental?"],
+[500,"A standard dwelling-fire landlord policy covers up to this maximum number of units in one structure.","What is four?"],
+]},
+"Manufactured Home":{icon:"🚚",qs:[
+[100,"This is the common policy type for a manufactured or mobile home.","What is HO-7?"],
+[100,"Coverage for the mobile home structure itself is still called this.","What is dwelling coverage?"],
+[200,"Mobile homes are built to safety codes set by this federal agency, not local building codes.","What is HUD?"],
+[200,"These devices anchor a manufactured home and are often required for windstorm coverage.","What are tie-downs?"],
+[300,"Moving a manufactured home down the highway requires this special temporary coverage.","What is trip transit?"],
+[300,"Attached carports and awnings on a mobile home are usually insured under this coverage.","What is other structures?"],
+[400,"A newer manufactured home often qualifies for this settlement type, while an older one may only get ACV.","What is replacement cost?"],
+[400,"Mobile homes are especially vulnerable to this peril, which is why tie-downs matter so much.","What is windstorm?"],
+[500,"A modular home is insured on an HO-3, not an HO-7, because it's built to this standard.","What is local building code?"],
+[500,"In coastal states, this risk factor most dramatically raises a manufactured home premium.","What is hurricane or wind risk?"],
+]},
+"Boat Insurance":{icon:"⛵",qs:[
+[100,"This coverage pays for damage to the hull and structure of the boat itself.","What is physical damage?"],
+[100,"If your boat's wake damages another vessel, this coverage responds.","What is watercraft liability?"],
+[200,"This coverage pays to haul your boat out of the water if it sinks.","What is wreck removal?"],
+[200,"This covers injuries to a friend being towed behind your boat on a tube.","What is medical payments?"],
+[300,"Taking a boat out of the water and reducing coverage for the winter is called this.","What is a lay-up period?"],
+[300,"This policy restriction defines the waters where the boat is allowed to operate.","What are navigational limits?"],
+[400,"If your boat leaks fuel into a lake, this specific coverage pays the cleanup cost.","What is fuel spill liability?"],
+[400,"This settlement type pays a pre-set amount if the boat is totaled, with no depreciation.","What is agreed value?"],
+[500,"Small unmotorized boats like a canoe often have limited coverage already built into this other policy.","What is homeowners insurance?"],
+[500,"Fast, powerful vessels face stricter underwriting and are classified as this.","What is a high-performance boat?"],
+]},
+"Motorcycle & ORV":{icon:"🏍️",qs:[
+[100,"This is the coverage legally required to ride a motorcycle on public roads.","What is liability?"],
+[100,"A stolen motorcycle is paid for under this physical damage coverage.","What is comprehensive?"],
+[100,"This category of vehicle includes ATVs, UTVs, and side-by-sides.","What is an off-road vehicle?"],
+[200,"Dropping the bike in a parking lot is paid under this coverage.","What is collision?"],
+[200,"This endorsement covers custom chrome, saddlebags, and aftermarket parts on a bike.","What is custom parts coverage?"],
+[200,"Riders who complete this often earn a discount on their motorcycle premium.","What is a safety course?"],
+[300,"Because many state PIP laws exclude motorcycles, this coverage becomes especially important.","What is medical payments?"],
+[300,"Homeowners policies generally won't cover an ATV once it's driven here.","What is off your property?"],
+[400,"Racing an ATV on a closed track typically does this to the policy's coverage.","What is voids it?"],
+[400,"If a friend borrows and crashes your insured UTV, this principle usually extends coverage.","What is permissive use?"],
+[500,"A street-legal dirt bike or dual-sport must be insured as this, not as an off-road vehicle.","What is a motorcycle?"],
+[500,"ORV premiums are heavily driven by engine size, measured in these units.","What are CCs?"],
 ]},
 "Discounts":{icon:"💰",qs:[
-[100,"Having your auto and home policies with the same carrier typically earns this type of discount on both policies.","What is a multi-policy discount?"],
-[200,"A student who maintains a B average or better may qualify for this auto discount — which also incentivizes parents to ask about it at policy inception.","What is the good student discount?"],
-[300,"Customers who switch carriers before their existing policy expires may qualify for this discount — making timing a key part of the sales conversation.","What is an early signing discount?"],
-[400,"A customer insures a new car with a loan on it, has a teen driver with a 3.8 GPA, and just moved into their first home. Name three separate discounts you should immediately ask about or apply across their auto and home policies.","What are good student, multi-policy bundling, and new home discount?"],
-[500,"A customer's premium goes up at renewal. They are frustrated and threaten to leave. You identify that they are not on autopay, have not taken a defensive driving course, and recently paid off their car loan meaning GAP coverage can be removed. The three specific actions you take to bring their premium down without changing their core coverage.","What are enrolling in autopay, adding a defensive driver discount, and removing GAP coverage?"]
+[100,"Insuring both your car and home with one carrier earns this discount on both policies.","What is the multi-policy discount?"],
+[100,"A teenager with a B average or better earns this auto discount.","What is the good student discount?"],
+[200,"Setting up automatic monthly payments from your bank typically earns this discount.","What is the autopay discount?"],
+[200,"A vehicle with anti-theft systems, airbags, and anti-lock brakes qualifies for this discount.","What is the safety discount?"],
+[300,"Switching carriers before your current policy expires can earn this discount for no lapse.","What is the early signing discount?"],
+[300,"This app-based program rewards safe braking and mileage habits with a usage-based discount.","What is telematics?"],
+[400,"Monitored alarms, sprinkler systems, and deadbolts on a home all qualify for this discount.","What is the protective device discount?"],
+[400,"Paying the full annual premium up front instead of monthly often earns this discount.","What is the paid-in-full discount?"],
+[500,"A homeowner who bundles, goes paperless, pays in full, and adds protective devices can stack this many distinct discounts.","What is four?"],
+[500,"This discount, given for staying claim-free for several years, can vanish instantly after a single at-fault loss.","What is the claims-free, or accident-free, discount?"],
 ]},
-"Sales Process":{icon:"📞",qs:[
-[100,"The very first step of any inbound quote call — should be completed within the first 20 seconds.","What is the opening or greeting?"],
-[200,"The call step that uses open-ended questions to learn about the customer's household, assets, and coverage needs before any price is discussed.","What is discovery?"],
-[300,"This step walks the customer through their coverage options and builds perceived value before a price is ever mentioned.","What is the GCC?"],
-[400,"After you present the price to a customer, the most powerful thing you can do next is this — and most agents get it wrong.","What is stay silent?"],
-[500,"A customer calls for an auto quote, gets the price, and says 'let me shop around.' You have not yet asked about their home, life, or umbrella. Walk through the two things you failed to do earlier in the call that led to this outcome — and what you should do right now before they hang up.","What are skipping the GCC and failing to present the bundle — and pivot to discovery before ending the call?"]
+"The Sales Call":{icon:"📞",qs:[
+[100,"The opening greeting and first impression should be completed within this many seconds.","What is twenty?"],
+[100,"Before quoting any price, the agent uses open-ended questions in this phase.","What is discovery?"],
+[200,"This single discovery question, asked on every auto call, opens the entire bundle conversation.","What is 'Do you own or rent?'?"],
+[200,"Stating the purpose of the call up front, instead of asking 'how are you,' helps the agent keep this.","What is control?"],
+[300,"Right after presenting the price, the most powerful move an agent can make is this.","What is stay silent?"],
+[300,"Confirming you understand the customer's needs before quoting is this listening technique.","What is active listening?"],
+[400,"This consultative phase replaces order-taking by matching coverage to the customer's goal first.","What is the guided coverage conversation?"],
+[400,"Matching a hurried caller's faster pace and energy is this rapport-building technique.","What is mirroring?"],
+[500,"A weak opening invites the customer to immediately throw out one of these early roadblocks.","What is an objection?"],
+[500,"Done well, the first 20 seconds make the customer see you as an expert instead of one of these.","What is a telemarketer?"],
+]},
+"Power of First 20":{icon:"⚡",qs:[
+[100,"The 'first 20' in this concept refers to the first 20 of these on a call.","What are seconds?"],
+[100,"The primary goal of the first 20 seconds is to establish this over the call.","What is control?"],
+[200,"A strong opening statement must project this emotion to the customer.","What is confidence?"],
+[200,"To humanize the call immediately, the agent should start using this.","What is the customer's name?"],
+[300,"Smiling while speaking on the phone changes this audible quality of your voice.","What is inflection, or tone?"],
+[300,"In the first 20 seconds, the agent transitions straight from the greeting into this phase.","What is discovery?"],
+[400,"Acknowledging where the lead came from — 'I see you requested a quote online' — sets this.","What is context?"],
+[400,"Giving the customer a quick roadmap of the call shows respect for their time and sets this.","What is an agenda?"],
+[500,"The reason the first 20 seconds matter most is that the customer uses them to decide whether to do this.","What is engage, or stay on the line?"],
+[500,"Eliminating filler words and hesitation in the opening prevents breeding this in the customer.","What is doubt?"],
+]},
+"GCC Framework":{icon:"🎯",qs:[
+[100,"GCC stands for this kind of guided conversation about coverage.","What is a guided coverage conversation?"],
+[100,"In the Goal–Coverage–Change framework, this is the very first thing the agent uncovers.","What is the goal?"],
+[200,"Asking 'What prompted you to call today?' is designed to uncover this.","What is the goal?"],
+[200,"Reviewing a customer's current 50/100 liability limits falls under this step of GCC.","What is coverage?"],
+[300,"Recommending an umbrella or higher limits represents this third step of GCC.","What is change?"],
+[300,"The GCC positions the agent as a trusted advisor instead of this.","What is an order-taker?"],
+[400,"Tying every recommended change directly back to the customer's stated goal is this technique.","What is value framing?"],
+[400,"A guided conversation keeps a call from becoming just this.","What is a transactional quote?"],
+[500,"The GCC is complete only when the agent understands the customer well enough to make this.","What is a tailored recommendation?"],
+[500,"If a customer's goal is to save money, the agent should steer the 'change' step toward these.","What are discounts?"],
 ]},
 "Objection Handling":{icon:"🗣️",qs:[
-[100,"When a customer says they are already insured elsewhere, this is the very first thing you should do — before saying anything else.","What is acknowledge?"],
-[200,"A customer says your rate is too high. After acknowledging, this is the specific question you ask in the Isolate step — designed to reveal what they are actually comparing your rate against.","What is 'What are you comparing it to — what does that quote include?'?"],
-[300,"When a customer says they need to talk to their spouse before deciding, the best response is to offer this.","What is including the spouse on the call?"],
-[400,"A customer says 'I've shopped around and everyone is cheaper than you — I don't see why I should pay more.' You've already done the GCC and know they have no umbrella, their home is insured for ACV not replacement cost, and their deductible is $500. Name the two specific coverage gaps you use to reframe the price conversation — and explain why each one matters more than the premium difference.","What are no umbrella — leaving them personally exposed in a lawsuit — and ACV instead of replacement cost — meaning they'd receive thousands less on a total loss?"],
-[500,"A customer says 'I already checked online and your rate is $40 more a month than what I can get elsewhere.' Using the AIR method, walk through all three steps — including the specific question you ask in the Isolate step and the value-based argument you make in the Respond step.","What is acknowledge their research, isolate by asking what coverage the competitor quoted, then respond by comparing coverage value not just price?"]
+[100,"When a customer raises any objection, this is the first thing a good agent does.","What is agree, or acknowledge?"],
+[100,"This three-letter framework for handling objections stands for Agree, Investigate, Respond.","What is AIR?"],
+[200,"In AIR, this is the middle step most agents skip — asking a question to find the real concern.","What is investigate?"],
+[200,"'I need to think about it' is usually not a true objection, but this.","What is a stall?"],
+[300,"'Feel, felt, found' is a scripted way to do this before redirecting the customer.","What is empathize?"],
+[300,"'Your price is too high' is the single most common one of these.","What is an objection?"],
+[400,"'I'm already with State Farm' is an objection rooted in this.","What is loyalty?"],
+[400,"You isolate a price objection by asking whether it's the down payment or this.","What is the monthly premium?"],
+[500,"When a customer says 'just email it to me,' the strongest response is to offer to do this instead.","What is review it together right now?"],
+[500,"After you Respond to an objection, you must immediately transition back to this.","What is the close?"],
 ]},
-"Bundling and Cross-Sell":{icon:"📦",qs:[
-[100,"The four product categories that make up a fully bundled household relationship.","What are auto, home, life, and umbrella?"],
-[200,"A customer with renters insurance calls to add a second driver to their auto policy. During discovery you learn they recently got a dog and host friends regularly. The single product conversation most urgently needed — and the specific risk that makes it urgent.","What is umbrella — a dog bite or guest injury could easily exceed their renters liability limit?"],
-[300,"A customer who just had a baby is a natural cross-sell opportunity for this specific product.","What is life insurance?"],
-[400,"Adding a teenage driver to an auto policy naturally opens the door to pitch this product — because of the elevated liability exposure that comes with it.","What is umbrella?"],
-[500,"A customer calls to add a second car to their existing auto policy. During discovery you learn they own their home, have a teenage driver, and have no life insurance or umbrella. Identify all four cross-sell conversations you should open before ending the call — and the correct order to present them.","What are homeowners, umbrella, good student discount, and term life — presented in order of most immediate liability risk first?"]
+"Assumptive Selling":{icon:"💬",qs:[
+[100,"This kind of language assumes the sale is already happening and skips asking permission.","What is assumptive?"],
+[100,"Asking 'would you like to move forward?' is dangerous because it invites this answer.","What is no?"],
+[200,"'Which card will you be using?' is this type of close.","What is an assumptive close?"],
+[200,"'Do you want it to start today or tomorrow?' is this specific kind of close.","What is an either/or close?"],
+[300,"Quoting the full bundle by default, instead of asking permission to add home, is this.","What is an assumptive quote?"],
+[300,"Words like 'if,' 'maybe,' and 'I think' should be cut because they signal this.","What is doubt, or weakness?"],
+[400,"'Who's going to be the secondary driver on the application?' is this kind of question.","What is an assumptive question?"],
+[400,"'Let's lock in this rate today' relies on this psychological trigger.","What is urgency, or fear of loss?"],
+[500,"Instead of asking whether to bundle, the assumptive agent simply asks this presuming question.","What is 'Do you own or rent?'?"],
+[500,"Friendly sales language swaps 'sign here' for asking the customer to do this instead.","What is authorize?"],
+]},
+"Asking for the Sale":{icon:"🤝",qs:[
+[100,"This is the direct request for the customer's business at the end of a pitch.","What is the call to action, or the ask?"],
+[100,"This close simply and directly asks if the customer is ready to start today.","What is the direct close?"],
+[200,"This close offers two yes options — 'today or the first?' — both of which move forward.","What is the alternative close?"],
+[200,"After you ask for the sale, the single most important rule is to do this.","What is stay silent?"],
+[300,"Asking for the customer's payment method is itself a form of this.","What is the close?"],
+[300,"'Sounds good' or 'that works' from a customer is this kind of signal.","What is a buying signal?"],
+[400,"These small yes-building questions throughout the call build momentum toward the ask.","What are trial closes?"],
+[400,"An agent who only gives quotes and never asks for the sale is acting as this.","What is an information booth?"],
+[500,"This closing technique recaps the coverage and total value one final time before the ask.","What is the summary close?"],
+[500,"Closing the sale on the very first phone call is known as this.","What is a one-call close?"],
+]},
+"Bundling & Cross-Sell":{icon:"📦",qs:[
+[100,"Insuring the home and auto together is commonly called this.","What is bundling?"],
+[100,"Selling a second line of business to an existing customer is called this.","What is cross-selling?"],
+[200,"Bundling home and auto earns the customer this financial benefit.","What is a multi-policy discount?"],
+[200,"Bundling improves this metric — meaning the customer stays with you longer.","What is retention?"],
+[300,"A customer who just bought their first home and insures cars elsewhere is the ideal target for this.","What is moving their auto to bundle?"],
+[300,"Adding a teenage driver is the natural trigger to recommend this liability-boosting product.","What is umbrella?"],
+[400,"A landlord client should always be encouraged to require their tenants to carry this.","What is renters insurance?"],
+[400,"A renters policy added to auto is often nearly free because of this offsetting discount.","What is the multi-policy, or bundle, discount?"],
+[500,"Retention climbs sharply once a customer holds this many policies, since moving them all is too much effort.","What is two or more?"],
+[500,"Discovering a customer owns a boat during the call should immediately prompt you to quote this.","What is a boat policy?"],
+]},
+"The Close":{icon:"✅",qs:[
+[100,"This close directly asks the customer if they're ready to get started today.","What is the direct close?"],
+[100,"'Today or the first of the month?' is this kind of close offering two yes options.","What is the alternative close?"],
+[200,"'Let's go ahead and get this started today' uses this kind of urgency language.","What is today language?"],
+[200,"Asking 'Does this make sense so far?' mid-call is this kind of close.","What is a trial close?"],
+[300,"After asking for the sale, the most important thing the agent does is this.","What is stay silent?"],
+[300,"Hesitating to ask for the sale usually stems from this fear.","What is rejection?"],
+[400,"This close recaps coverage and value one final time before asking for the decision.","What is the summary close?"],
+[400,"'Today language' is specifically designed to eliminate the customer's urge to do this.","What is think about it?"],
+[500,"Securing the sale on the very first call is called this.","What is a one-call close?"],
+[500,"Once a customer gives a buying signal like 'sounds good,' the agent should immediately move to this.","What is the application, or payment?"],
 ]},
 "Coverage Concepts":{icon:"📋",qs:[
-[100,"A policy that covers all losses except those specifically excluded — also called all-risk coverage.","What is an open-perils policy?"],
-[200,"The maximum dollar amount an insurer will pay out for a single covered loss under a policy.","What is a policy limit?"],
-[300,"The foundational insurance principle that says you can be restored to your prior financial position after a loss — but you cannot profit from it.","What is indemnity?"],
-[400,"After paying a claim on behalf of its insured, the insurer gains this legal right to pursue the at-fault third party for reimbursement.","What is subrogation?"],
-[500,"A homeowners policy has a $1,000 deductible and covers personal property on an ACV basis. A three-year-old $1,200 laptop is stolen. The insurer determines it has depreciated 40%. The exact dollar amount the customer receives — and the endorsement that would have paid the full replacement cost instead.","What is $720 — and a replacement cost endorsement on personal property?"]
+[100,"It's the out-of-pocket amount the insured pays before coverage kicks in.","What is the deductible?"],
+[100,"This is the maximum dollar amount an insurer will pay for a single covered loss.","What is the policy limit?"],
+[200,"A policy covering all losses except those specifically excluded is this type.","What is an open-perils policy?"],
+[200,"A policy covering only the specific causes of loss it lists is this type.","What is a named-perils policy?"],
+[300,"This core principle says insurance restores you after a loss but never lets you profit.","What is indemnity?"],
+[300,"This requirement says you must have a financial stake in what you insure.","What is insurable interest?"],
+[400,"After paying your claim, the insurer uses this legal right to pursue the at-fault party.","What is subrogation?"],
+[400,"A written addition that modifies, adds, or removes coverage from a base policy.","What is an endorsement?"],
+[500,"This clause reduces a claim payment if a property is insured for less than a required percentage of its value.","What is coinsurance?"],
+[500,"When two policies cover the same loss, this provision decides how they split the payment.","What is the other-insurance, or pro-rata, clause?"],
 ]},
 "Rate Factors":{icon:"📊",qs:[
-[100,"The auto rating factor that reviews your history of at-fault accidents and traffic violations.","What is driving record?"],
-[200,"The homeowners rating factor based on the estimated cost to completely rebuild the home from scratch — not its market value.","What is replacement cost?"],
-[300,"The rating factor based on the geographic area where the home or vehicle is garaged — reflecting local claim frequency and severity.","What is territory?"],
-[400,"The industry database report that reveals a property's history of prior insurance claims — commonly pulled during HO underwriting.","What is a CLUE report?"],
-[500,"Two customers live on the same street, drive the same car, and have identical driving records. Customer A has excellent credit and pays $112/month. Customer B has poor credit and pays $189/month. Name the specific rating factor causing the difference, explain why insurers use it, and identify the two states where this factor is banned entirely.","What is insurance score — insurers use it because it correlates statistically with claim frequency, and it is banned in California, Massachusetts, and Hawaii?"]
+[100,"Accidents and tickets appear on this record, a primary auto rating factor.","What is the driving record?"],
+[100,"This basic factor — how far you drive to work each day — affects an auto premium.","What is mileage, or commute distance?"],
+[200,"Home premiums are based on this — the cost to rebuild, not the market value.","What is replacement cost?"],
+[200,"This factor describes how a vehicle is used, such as commuting versus pleasure.","What is primary use?"],
+[300,"This rating factor reflects the claim frequency and crime of the area where a car or home sits.","What is territory?"],
+[300,"The year, make, model, and safety rating of a car all roll into this rating factor.","What is the vehicle type, or symbol?"],
+[400,"Underwriters pull this industry report to see a property's history of past claims.","What is a CLUE report?"],
+[400,"Underwriters pull this report to see a driver's history of accidents and violations.","What is an MVR?"],
+[500,"Banned as a rating factor in California, Massachusetts, and Hawaii, this credit-based number is widely used elsewhere.","What is the insurance score?"],
+[500,"This concept groups similar risks together so each pays a fair share of expected losses.","What is classification, or rating tiers?"],
 ]},
-"The Close":{icon:"🤝",qs:[
-[100,"Simply and directly asking the customer if they are ready to get started today.","What is the direct close?"],
-[200,"The closing technique where you recap the coverage and its value one final time before asking the customer for a decision.","What is the summary close?"],
-[300,"The closing technique that gives the customer two forward-moving options — such as 'Would you like to start today or the first of the month?'","What is the alternative close?"],
-[400,"Small yes-building questions sprinkled naturally throughout the call that create momentum and make the final close feel inevitable.","What are trial closes?"],
-[500,"A customer says yes to auto but declines home because they 'need to think about it.' You have already done the GCC and presented the bundle. Without being pushy, walk through the exact words and sequence you use to re-engage them on home before ending the call — and what you set up if they still say no.","What is use the alternative close on timing, tie home back to a specific need uncovered in discovery, then if still no — schedule a specific callback within 48 hours and send a follow-up with the home quote?"]
+"Empathy & Communication":{icon:"🤝",qs:[
+[100,"Restating what a customer said in your own words to show you listened is this.","What is reflective listening?"],
+[100,"Before offering any solution to an upset customer, the agent should always do this first.","What is acknowledge their feelings?"],
+[200,"Using the customer's name naturally during a call helps build this.","What is rapport?"],
+[200,"Even on the phone where they can't be seen, doing this physically warms an agent's voice.","What is smiling?"],
+[300,"When a customer is venting in anger, the single most important thing the agent does is this.","What is listen without interrupting?"],
+[300,"Showing the customer you genuinely grasp their situation is leading with this.","What is empathy?"],
+[400,"After delivering bad news like a rate increase, the agent should never leave the customer with this.","What is silence, or no next step?"],
+[400,"Matching the customer's pace, tone, and energy level is this rapport technique.","What is mirroring?"],
+[500,"Replacing 'I can't do that' with 'here's what I can do' is this reframing technique.","What is positive, or solution-focused, language?"],
+[500,"When a customer's claim was denied and they feel misled, the agent's first job is to do this, not defend.","What is listen and validate?"],
 ]},
-"Empathy and Communication":{icon:"💬",qs:[
-[100,"The communication skill of restating what a customer said in your own words to prove you were truly listening.","What is reflective listening?"],
-[200,"Before you offer any solution or explanation to an upset customer, always do this first.","What is acknowledge their feelings?"],
-[300,"Using the customer's first name naturally and appropriately during a call builds this intangible quality that makes customers more likely to buy.","What is rapport?"],
-[400,"After delivering bad news — such as a rate increase — you should never let this happen next in the conversation.","What is silence with no next step?"],
-[500,"A customer calls in furious — their claim was denied and they feel they were misled when they bought the policy. They are yelling and threatening to cancel everything. Without defending the claim decision or making promises you cannot keep, walk through the exact sequence of steps you take in this call to de-escalate and retain the customer.","What is listen without interrupting, validate their frustration, apologize for the experience, clarify what happened factually, offer to escalate or review, and secure the relationship before ending the call?"]
-]},
-"Coverage Gaps and Scenarios":{icon:"⚠️",qs:[
-[100,"A customer with liability-only auto insurance experiences a total loss from a hailstorm. The missing coverage that would have paid for their vehicle.","What is comprehensive?"],
-[200,"A customer's car is totaled and the insurer pays the ACV. The customer still owes $7,000 more on the loan than they received. The product that covers this exact gap.","What is GAP coverage?"],
-[300,"A customer's laptop is stolen from their car. Their auto policy denies the claim. Their homeowners policy has a $500 deductible and the laptop is worth $900. The HO coverage section that pays — and the net check the customer receives.","What is Coverage C personal property — and $400 after the deductible?"],
-[400,"A customer owns a home and rents out the basement apartment. The specific exposure that their standard HO-3 does not cover.","What is landlord or rental liability?"],
-[500,"A customer runs a dog-grooming business out of their home. A client's pet is injured during a session. The homeowners policy provision most likely to deny the claim entirely.","What is the business exclusion?"]
+"Coverage Gaps":{icon:"⚠️",qs:[
+[100,"A liability-only driver whose car is destroyed by hail is missing this coverage.","What is comprehensive?"],
+[100,"A renter whose belongings burn in a building fire is protected only if they bought this.","What is renters insurance?"],
+[200,"A customer whose totaled car loan exceeds the payout needed this product to cover the gap.","What is GAP coverage?"],
+[200,"A homeowner with rising water from a nearby river has a gap, because this is excluded.","What is flood?"],
+[300,"A homeowner running a daycare who's sued by an injured child likely faces denial under this exclusion.","What is the business exclusion?"],
+[300,"A condo owner whose HOA bills all owners after a big claim needs this coverage to pay their share.","What is loss assessment?"],
+[400,"A homeowner renting out a basement apartment has a gap, since a standard HO-3 excludes this liability.","What is rental, or landlord, liability?"],
+[400,"A driver using their personal car for DoorDash has a gap, because personal auto excludes this.","What is business, or delivery, use?"],
+[500,"A self-employed contractor storing $40,000 of tools in a work van faces a gap, since personal lines exclude this.","What is commercial, or business, property?"],
+[500,"A customer with $100,000 in liability sued for $400,000 needed this product to bridge the $300,000 gap.","What is umbrella?"],
 ]},
 "Insurance Fundamentals":{icon:"📚",qs:[
-[100,"The foundational concept behind insurance — many people contribute premiums so that the losses of the few can be paid.","What is risk pooling?"],
-[200,"The principle that requires an insured to have a legitimate financial stake in the person or property being insured.","What is insurable interest?"],
-[300,"The only type of risk that insurance is designed to cover — one where the outcome can only be a loss, never a financial gain.","What is a pure risk?"],
-[400,"The tendency for people who know they are higher-risk to seek out insurance more aggressively than lower-risk individuals — creating an imbalanced pool.","What is adverse selection?"],
-[500,"A region experiences three catastrophic hurricanes in one year. A single insurer that wrote 40% of all homeowners policies in that region faces $900 million in claims — far more than its reserves. Name the two mechanisms that exist specifically to prevent a single insurer from becoming insolvent in this scenario and explain the role each plays.","What are reinsurance — which transfers excess risk to another insurer — and state guaranty funds — which protect policyholders if an insurer does become insolvent?"]
+[100,"Many people pay premiums so the unlucky few can be paid — the basic concept of insurance.","What is risk pooling?"],
+[100,"This is the periodic payment a policyholder makes to keep coverage active.","What is the premium?"],
+[200,"You can't insure a stranger's house because you lack this required financial stake.","What is insurable interest?"],
+[200,"This document is the legal contract spelling out coverage between insurer and insured.","What is the policy?"],
+[300,"Insurance only covers this type of risk — where the outcome can be a loss but never a gain.","What is pure risk?"],
+[300,"Shifting the financial burden of a possible loss from an individual to an insurer is this.","What is risk transfer?"],
+[400,"When high-risk people seek insurance more than low-risk people, it creates this imbalance.","What is adverse selection?"],
+[400,"Deliberately causing or exaggerating a loss to collect is this, which voids coverage.","What is fraud?"],
+[500,"Insurers buy their own coverage from larger companies through this practice to survive catastrophes.","What is reinsurance?"],
+[500,"This principle says only a small, predictable share of insureds will file claims in a given year — letting insurers set rates.","What is the law of large numbers?"],
 ]},
-"Underwriting and Eligibility":{icon:"🔍",qs:[
-[100,"A new customer submits a homeowners application. Before the policy is issued, the carrier sends someone to photograph the roof, note the condition of the porch, and document any trampolines or dogs. This pre-acceptance process is called this.","What is underwriting inspection?"],
-[200,"A homeowner's policy comes up for renewal. The carrier reviews updated claim data and decides it no longer wants to insure the property — but must wait until policy end to exit. This action is called this — and differs from canceling mid-term.","What is non-renewal?"],
-[300,"The market segment where drivers with serious violations — such as multiple DUIs — are placed when standard carriers decline them.","What is the non-standard or high-risk market?"],
-[400,"The underwriting condition that exists when a property is insured for less than its true replacement cost — leaving the owner exposed at claim time.","What is being underinsured?"],
-[500,"Rather than declining a homeowners policy outright due to an aging roof, many underwriters take this approach instead — adjusting the terms rather than rejecting the risk.","What is requiring an inspection, adding a surcharge, or excluding wind/hail?"]
+"Underwriting":{icon:"🔍",qs:[
+[100,"This is the overall process of evaluating a risk and deciding whether to insure it and at what price.","What is underwriting?"],
+[100,"Before issuing a homeowners policy, a carrier may send someone to do this to the property.","What is an inspection?"],
+[200,"When a carrier decides at policy-end it no longer wants a risk, this differs from a cancellation.","What is non-renewal?"],
+[200,"Ending a policy in the middle of its term, often for non-payment or fraud, is this.","What is cancellation?"],
+[300,"Drivers with multiple DUIs who are declined by standard carriers end up insured in this market.","What is the non-standard, or high-risk, market?"],
+[300,"An extra charge added to a premium because of an elevated risk factor is this.","What is a surcharge?"],
+[400,"A property insured for less than its true replacement cost is in this dangerous condition.","What is underinsured?"],
+[400,"A carrier reviewing whether to keep a risk reads this database of the property's past claims.","What is a CLUE report?"],
+[500,"Rather than decline a home with an aging roof, underwriters often add this instead.","What is a separate wind/hail deductible?"],
+[500,"This document, sent before non-renewal or cancellation, is legally required to give the insured time.","What is a notice of non-renewal, or cancellation notice?"],
 ]},
 "Claims Process":{icon:"📝",qs:[
-[100,"The insurer's representative who is assigned to investigate a claim, assess the damage, and authorize a payment amount.","What is a claims adjuster?"],
-[200,"A customer's home suffers $60,000 in fire damage. Their adjuster visits, documents everything, and issues payment — but the customer later discovers a damaged piece of custom furniture was missed. The specific step in the claims process the customer failed to complete thoroughly before accepting the check.","What is submitting a complete proof of loss?"],
-[300,"The insured's obligation to take reasonable steps to prevent additional damage from occurring after a covered loss has happened.","What is the duty to mitigate?"],
-[400,"After paying a claim on behalf of its insured, the insurer may exercise this right to pursue the responsible third party for reimbursement.","What is subrogation?"],
-[500,"A customer files a water damage claim. The adjuster discovers the damage is from a slow leak that developed over several months — not a sudden burst pipe. The specific policy exclusion that applies, why it applies, and what the customer could have done at purchase to have been better protected.","What is the gradual or progressive damage exclusion — it applies because the loss was not sudden and accidental, and the customer could have added a water backup endorsement for related risks?"]
+[100,"This person is assigned by the insurer to investigate a claim and authorize payment.","What is the adjuster?"],
+[100,"The amount the insured pays out of pocket on a claim before coverage applies is this.","What is the deductible?"],
+[200,"The formal document an insured submits stating the facts and value of their loss.","What is the proof of loss?"],
+[200,"The first thing an insured should do after a loss is this.","What is report, or file, the claim?"],
+[300,"After a loss, the insured has this duty — to take reasonable steps to prevent further damage.","What is the duty to mitigate?"],
+[300,"A claim for a stolen item paid at depreciated value was settled on this basis.","What is actual cash value?"],
+[400,"Filing a deliberately false or inflated claim is this crime, which voids coverage.","What is fraud?"],
+[400,"When the insured and insurer disagree on a loss's value, this clause brings in neutral appraisers.","What is the appraisal clause?"],
+[500,"A slow leak that developed over months — not a sudden burst — is denied under this exclusion.","What is gradual damage?"],
+[500,"After paying a fire claim caused by a faulty appliance, the insurer pursues the maker through this.","What is subrogation?"],
 ]},
-"Ethics and Compliance":{icon:"⚖️",qs:[
-[100,"The illegal practice of offering a customer a gift, cash, or rebate as an inducement to purchase an insurance policy.","What is rebating?"],
-[200,"An agent tells a prospect that a competitor's policy 'basically covers nothing' and that only their policy covers flood damage — neither claim is true. The specific ethics violation this agent has committed.","What is misrepresentation?"],
-[300,"An agent notices a customer's current policy has a lower commission rate than a newer product. They call the customer and recommend switching — framing it as a better deal — even though the customer's current coverage is perfectly adequate. Name the ethics violation and what distinguishes it from a legitimate product recommendation.","What is twisting — distinguished from a legitimate recommendation because the switch benefits the agent financially, not the customer?"],
-[400,"The standard requiring insurance companies to investigate and pay valid claims fairly, honestly, and without unreasonable delay.","What is good faith?"],
-[500,"The federal privacy law that governs how insurance companies and financial institutions collect, use, share, and protect customers' nonpublic personal information.","What is the Gramm-Leach-Bliley Act?"]
+"Ethics & Compliance":{icon:"⚖️",qs:[
+[100,"Offering a customer cash or a gift to induce them to buy a policy is this illegal practice.","What is rebating?"],
+[100,"Telling a customer their policy covers something it doesn't is this serious violation.","What is misrepresentation?"],
+[200,"Convincing a customer to needlessly replace a good policy just to earn commission is this.","What is twisting?"],
+[200,"A licensed agent's duty to act in the customer's best interest is this kind of responsibility.","What is fiduciary?"],
+[300,"Insurers are legally bound to investigate and pay valid claims promptly and honestly under this duty.","What is good faith?"],
+[300,"Steering all your business to one carrier you secretly co-own without disclosing it violates this.","What is disclosure, or conflict-of-interest rules?"],
+[400,"Charging two similar customers different rates for reasons unrelated to risk is illegal as this.","What is unfair discrimination?"],
+[400,"Keeping client premium money in your own account instead of remitting it is this crime.","What is commingling, or conversion?"],
+[500,"This federal law governs how financial institutions protect customers' nonpublic personal information.","What is the Gramm-Leach-Bliley Act?"],
+[500,"An insurer's unreasonable refusal to pay a valid claim can expose it to this beyond the policy limit.","What is a bad-faith claim?"],
 ]},
 "Customer Retention":{icon:"🔄",qs:[
-[100,"The number one stated reason customers leave one insurance carrier and go to a competitor.","What is price?"],
-[200,"The single most effective retention tool an agent has — conducted proactively with each customer once per year.","What is an annual review?"],
-[300,"A customer who has been with the carrier for four years calls to say they are switching because a competitor is slightly cheaper. Research shows bundled customers are far less likely to leave than mono-line customers. The two specific actions at point-of-sale that most directly predict whether a customer will still be on the books in year five.","What are bundling multiple policies and enrolling in autopay?"],
-[400,"A customer who filed a claim last year calls at renewal — their premium went up $38 a month and they are angry. Walk through the specific sequence of steps to handle this call — starting with what you do in the first 30 seconds and ending with how you close to retain them.","What is let them vent fully, acknowledge the frustration, explain the surcharge factually without apologizing for it, pivot to a coverage review to find savings, and close by reinforcing the value of the relationship?"],
-[500,"A 6-year customer with auto, home, and renters calls to cancel everything because a competitor is $55 per month cheaper. You do a coverage comparison and find the competitor's quote has a $2,500 deductible vs. their current $500, no loss of use coverage, and lower liability limits. Walk through how you frame this discovery to keep the customer — without bashing the competitor.","What is reframe the savings as a coverage trade-off — show the dollar risk of the higher deductible and gaps, and let the customer conclude the competitor quote is not an apples-to-apples comparison?"]
+[100,"It's the number one stated reason customers switch insurance carriers.","What is price?"],
+[100,"Conducted once a year with every customer, this proactive meeting is an agent's best retention tool.","What is the annual review?"],
+[200,"Bundled customers and those on this payment method are far less likely to leave at renewal.","What is autopay?"],
+[200,"When a customer calls to cancel, the agent's very first move should be to do this.","What is ask why?"],
+[300,"Rather than match a competitor's price, the smarter retention move is to do this.","What is a coverage comparison?"],
+[300,"Reaching out right after a claim is paid, even though nothing is wrong, builds this.","What is loyalty, or trust?"],
+[400,"A customer angry about a surcharge after a claim should first be allowed to do this.","What is vent, or be heard?"],
+[400,"Holding multiple policies makes a customer harder to lose because of this — the effort to move them all.","What is friction, or switching cost?"],
+[500,"A six-year customer leaving over $55 a month is best kept by reframing the savings as this.","What is a coverage trade-off?"],
+[500,"Tracking how many customers leave each year produces this key retention metric.","What is the churn, or attrition, rate?"],
 ]},
-"Needs-Based Scenarios":{icon:"🧩",qs:[
-[100,"A 22-year-old renter calls in asking only about auto insurance. This is the most important coverage gap to surface during discovery.","What is renters insurance?"],
-[200,"A customer calls to add their 16-year-old to the auto policy. Two additional product conversations every agent should open immediately.","What are umbrella and the good student discount?"],
-[300,"A newlywed couple just bought their first home and currently insure their cars elsewhere. The immediate cross-sell opportunity and the bundling conversation to have.","What is homeowners — and moving their auto to bundle?"],
-[400,"A retired homeowner with no mortgage, minimal driving, and $800,000 in savings. The product most critical to discuss — and the reason why.","What is umbrella — because high net worth means high lawsuit exposure?"],
-[500,"A self-employed contractor with two employees uses a personal truck for work and works out of their home. The specific reason standard personal lines policies are not adequate for this customer.","What is commercial exposure — personal auto and home exclude business use?"]
+"Needs-Based Selling":{icon:"🧩",qs:[
+[100,"A 22-year-old who calls only about car insurance almost certainly also needs this overlooked policy.","What is renters insurance?"],
+[100,"A customer who just bought their first home presents this immediate cross-sell.","What is homeowners insurance?"],
+[200,"A retiree with $800,000 in savings and a paid-off home most needs this asset-protecting policy.","What is umbrella?"],
+[200,"A customer who just added a 16-year-old driver should hear about a discount and this product.","What is umbrella?"],
+[300,"A self-employed contractor using a personal truck for work has a gap, since personal auto excludes this.","What is business use?"],
+[300,"A customer who just bought a boat should be quoted boat coverage and offered this overlying policy.","What is umbrella?"],
+[400,"A landlord with three rental properties should facilitate this for every one of their tenants.","What is renters insurance?"],
+[400,"A customer who travels often and rents cars frequently may benefit from raising this on their auto policy.","What is liability, or adding non-owner coverage?"],
+[500,"A customer with a pool, a dog, and a teenage driver has stacked exposures best addressed by this one product.","What is umbrella?"],
+[500,"Discovering a home-based business during discovery signals a gap that personal lines won't cover, requiring this.","What is a commercial, or business owners, policy?"],
 ]},
 "Industry Vocabulary":{icon:"📖",qs:[
-[100,"The page at the front of every insurance policy listing the named insured, address, coverages, limits, deductibles, and premium.","What is the declarations page?"],
-[200,"A customer calls on a Friday afternoon wanting to drive a newly purchased car off the lot this weekend — but the policy hasn't been formally issued yet. The document the agent provides immediately that proves coverage is active.","What is a binder?"],
-[300,"An agent pulls this report during auto underwriting and discovers the applicant had two at-fault accidents and a DUI in the past three years — none of which were disclosed on the application. The report that revealed this — and the likely underwriting outcome.","What is an MVR — and the policy will likely be rated up, restricted, or declined?"],
-[400,"A customer's adult child is listed as a named driver on the parent's auto policy and causes a serious at-fault accident while driving the family car. The legal distinction between the named insured and this other category of covered person — and how it affects which party the insurer contacts first when settling the claim.","What is an additional insured or listed driver — the insurer contacts the named insured as the primary policyholder even when another covered driver caused the loss?"],
-[500,"A customer adds their college-aged child's landlord as an additional interested party on their renters policy. Explain the legal distinction between an additional insured and an additional interested party — and why the landlord's attorney would insist on the correct designation before signing the lease.","What is an additional insured has coverage rights under the policy, while an additional interested party only receives notice of cancellation — the landlord needs additional insured status to have liability protection?"]
-]}
-,"Power of First 20":{icon:"⚡",qs:[
-[100,"The specific window of time the Power of First 20 refers to — and why it matters more than any other moment on the call.","What is the first 20 seconds — because the customer decides in that window whether they want to engage?"],
-[200,"The final five words of the ProSim opening script that replace the generic 'how can I help you today' — and why those words matter.","What is 'how can I help protect you today' — protect frames the call around the customer's safety rather than a transaction?"],
-[300,"The two things an agent must establish in the first 20 seconds — before asking a single discovery question — to set a consultative tone.","What are authority and rapport?"],
-[400,"A rep answers the call and immediately says: 'Sure, let me pull that quote up — what is your zip code?' Name the POF20 principle they violated and what they should have done instead.","What is failing to establish authority and take control — they should have introduced themselves as a licensed agent, set a consultative tone, and moved to discovery before touching the quoting system?"],
-[500,"A customer opens with 'I just need a quick quote, I do not want a whole sales pitch.' Write the exact two-sentence POF20 response that acknowledges the request, reestablishes control, and pivots to discovery — without sounding defensive.","What is something like: 'Absolutely, I can get you a number fast — I just want to ask two quick questions first so the quote is accurate for your situation. Sound good?'?"]
-]}
-,"GCC — Goal, Coverage, Change":{icon:"🎯",qs:[
-[100,"GCC stands for two things simultaneously in ProSim. Name both — the method name and the three-word outcome framework.","What are Guided Coverage Conversation and Goal, Coverage, Change?"],
-[200,"The first step of Goal, Coverage, Change — what the agent must uncover before recommending any product.","What is the customer's goal — the real thing they are trying to protect?"],
-[300,"After matching coverage to the customer's goal, the third step of GCC involves telling the customer this — which lowers fear of commitment and raises the close rate.","What is that their coverage can always be changed and will grow with them as their life changes?"],
-[400,"A customer says 'I just need liability on my car.' An order-taker quotes liability only. A GCC agent does this instead — and names the specific first question that opens the framework.","What is pivot to discovery — 'Before I build that out, let me ask a couple quick questions to make sure we are not missing anything' — starting with 'Do you own or rent?'?"],
-[500,"Explain why GCC is described as an internal mindset rather than a customer-facing script — and name the single behavior that most clearly separates a GCC agent from an order-taker.","What is GCC is a way of thinking — the order-taker quotes what was asked, while the GCC agent uncovers what the customer actually needs and makes a recommendation the customer did not know they needed?"]
-]}
-,"AIR — Agree, Investigate, Respond":{icon:"🛡️",qs:[
-[100,"AIR stands for these three words — the ProSim framework for handling every customer objection.","What is Agree, Investigate, Respond?"],
-[200,"The AIR step most agents skip — jumping from agreement straight to a response without doing this first.","What is Investigate — asking a probing question to uncover what is really driving the objection?"],
-[300,"The Feel/Felt/Found language belongs in the Respond step of AIR. Write the complete template using all three words in order.","What is 'I understand how you feel — many of my customers have felt the same way. What they found is [the resolution]'?"],
-[400,"A customer says 'I have been with my company for 10 years and I feel loyal to them.' Walk through all three AIR steps — Agree, the Investigate question, and the Found pivot in Respond.","What is Agree ('That loyalty is admirable and I respect it'), Investigate ('When was the last time they proactively called you to review your coverage or find you more value?'), Respond with Found ('What most long-term customers find is that loyalty should go both ways — let me show you what a real review looks like')?"],
-[500,"A customer pushes back a second time after you have already run AIR once — saying 'I still think I can find it cheaper.' Explain what must change about your Investigate step on the second pass — and why repeating the first AIR response will not work.","What is the Investigate step must go deeper on the second pass — probe specifically what coverage the competitor is quoting, not just price, so the Respond step can identify a concrete gap rather than re-stating the general value argument the customer already heard?"]
-]}
-,"Protecting the Whole Customer":{icon:"🏠",qs:[
-[100,"The ProSim name for the call phase where the agent presents every product the household needs — not just the one product the customer called about.","What is Protect the Whole Customer?"],
-[200,"On every auto call, this single question — asked without waiting for the customer to bring it up — is the gateway to the entire bundle conversation.","What is 'Do you own or rent?'?"],
-[300,"ProSim trains agents to avoid the word 'savings' when presenting the bundle. The replacement word and the reframe that goes with it.","What is 'value' — framing the bundle as comprehensive protection that ensures nothing falls through the cracks, not a discount play?"],
-[400,"Name the four levels of the ProSim bundle ladder in order — and identify at which level customer retention becomes meaningfully harder for a competitor to break.","What are single (auto only), double (auto plus home or renters), triple (auto plus home plus umbrella), and household (all four lines) — retention strengthens significantly at double because moving two policies is much harder than moving one?"],
-[500,"A customer has auto with you. Discovery reveals they own a home, have a 17-year-old driver, a boat, and no life insurance. Map the complete bundle conversation — the order you raise each product, the trigger for each, and which you lead with and why.","What is lead with home (biggest gap, most natural from 'do you own or rent'), then umbrella triggered by the teen driver and boat liability, then boat as ancillary tied to the umbrella conversation, then life insurance anchored to the teenager and income protection — home first because it frames the whole relationship?"]
-]}
-,"Asking for the Sale":{icon:"💰",qs:[
-[100,"ProSim says you never ask 'would you like to move forward?' — because that phrasing does this to the sale.","What is invite a no — assumptive language assumes the yes and moves to logistics instead?"],
-[200,"Complete the payment-ask close with the correct assumptive phrasing: 'Great, let us get this set up — what is the best _____ to use for your first payment?'","What is card or payment method?"],
-[300,"A customer hears the full quote and goes silent. The ProSim-trained agent does this next — rather than re-explaining, offering a concession, or asking if they have questions.","What is stay silent — let the pause work and wait for the customer to speak first?"],
-[400,"A customer says yes to auto but stalls on home. Write the exact alternative close that presents two forward-moving options — both of which assume the home policy is happening.","What is something like 'Do you want the home coverage to start the same date as the auto, or would the first of next month work better?'?"],
-[500,"A customer says 'that is a lot, let me think about it' after the full bundle quote. Without re-presenting or asking what they are unsure about, walk through the exact two-step recovery using a tie-down followed by a payment pivot — and explain why both steps must happen before the call ends.","What is deliver a tie-down ('You would be fully protected — auto, home, and the umbrella sits above both'), then immediately pivot to payment ('Are you putting that on a card or setting up a bank draft?') — both must happen before hanging up because once the call ends the close is almost certainly lost?"]
-]}
-,"Assumptive Language":{icon:"💬",qs:[
-[100,"An agent says 'Would you like to add renters insurance?' Write the ProSim assumptive version that removes the yes/no question entirely.","What is something like 'I am going to pull in your renters coverage while we are at it — do you rent an apartment or a house?'?"],
-[200,"The core difference between permissive and assumptive language — and which one ProSim trains agents to use.","What is permissive asks for permission and assumptive treats the decision as already made and moves to details — ProSim uses assumptive exclusively?"],
-[300,"Remove all weak words and rewrite this line in fully assumptive language: 'If you decide to go with us, you could potentially save money by bundling.'","What is something like 'When we set up your home alongside the auto, you get better value on both — I will pull that in now'?"],
-[400,"A rep says 'I think you might want to consider the umbrella — it could be a good fit.' Identify all three weak phrases and rewrite the line in ProSim assumptive language.","What are 'I think,' 'might want to consider,' and 'could be a good fit' — rewritten as 'The umbrella goes on top of your auto and home liability — I am adding that in because it is the right call for your situation'?"],
-[500,"Write three distinct assumptive re-close lines — one using today-framing, one using an either/or structure, and one using a payment pivot — and explain in one sentence what makes each one assumptive rather than permissive.","What is: today-framing ('Let us get this started today so your coverage is active before you get back on the road' — assumes action today), either/or ('Do you want the start date to be today or the first of the month?' — both options assume the sale), payment pivot ('Are you using a card or setting up a bank draft?' — assumes the sale is closed and moves to logistics)?"]
-]}
+[100,"This is the periodic payment a policyholder makes to keep coverage in force.","What is the premium?"],
+[100,"The person or entity named as the primary policyholder on a contract.","What is the named insured?"],
+[200,"The front page of any policy, listing the insured, coverages, limits, and premium.","What is the declarations page?"],
+[200,"A written change attached to a policy that adds, removes, or modifies coverage.","What is an endorsement, or rider?"],
+[300,"This temporary document proves coverage is active before the full policy is issued.","What is a binder?"],
+[300,"The person who sells the policy and is licensed to represent the insurer.","What is the agent, or producer?"],
+[400,"This industry report shows a driver's accident and violation history.","What is an MVR?"],
+[400,"The date a policy ends and must be renewed to keep coverage going.","What is the expiration, or renewal, date?"],
+[500,"This database compiles a property's prior insurance claims across carriers.","What is the CLUE report?"],
+[500,"The legal principle that an insurance application's statements are promises the coverage relies on.","What are warranties, or representations?"],
+]},
 };
 
 const VALUES=[100,200,300,400,500];
@@ -335,7 +828,7 @@ function renderCats(){
   Object.entries(BANKS).forEach(([name,data])=>{
     const c=document.createElement('div');
     c.className='cat-card'+(selCats.includes(name)?' sel':'');
-    c.innerHTML=`<div class="ci">${data.icon}</div><div class="cn">${name}</div><div class="cq">${data.qs.length} clues</div>`;
+    c.innerHTML=`<div class="ci">${data.icon}</div><div class="cn">${name}</div>`;
     c.onclick=()=>toggleCat(name,c);
     g.appendChild(c);
   });
@@ -363,9 +856,12 @@ function startGame(){
   const cats=selCats.slice(0,6);
   cats.forEach(cat=>{
     gameData[cat]={};
-    // Questions are already assigned values — map them directly
-    BANKS[cat].qs.forEach(([val,clue,resp])=>{
-      gameData[cat][val]=[clue,resp];
+    // Group this category's questions by value, then pick ONE at random per tier
+    VALUES.forEach(val=>{
+      const pool=BANKS[cat].qs.filter(q=>q[0]===val);
+      const pick=pool.length?pool[Math.floor(Math.random()*pool.length)]:null;
+      if(pick) gameData[cat][val]=[pick[1],pick[2]];
+      else gameData[cat][val]=["(no question available)","—"];
     });
   });
   usedCells={};
@@ -461,6 +957,279 @@ function playAgain(){
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 
 init();
+
+
+// ── AUDIO ENGINE ──────────────────────────────────────────────
+let audioCtx = null;
+function getCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playTone(freq, type, startTime, duration, gainVal, ctx){
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.connect(g); g.connect(ctx.destination);
+  o.type = type; o.frequency.setValueAtTime(freq, startTime);
+  g.gain.setValueAtTime(0, startTime);
+  g.gain.linearRampToValueAtTime(gainVal, startTime + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  o.start(startTime); o.stop(startTime + duration + 0.05);
+}
+
+// Warm chime — cell selected
+function playSelect(){
+  const ctx = getCtx(); const t = ctx.currentTime;
+  playTone(523.25,'sine',t,0.18,0.09,ctx);     // C5
+  playTone(659.25,'sine',t+0.06,0.16,0.07,ctx); // E5
+  playTone(783.99,'sine',t+0.12,0.22,0.06,ctx); // G5
+}
+
+// Positive award — bright ascending chime
+function playCorrect(){
+  const ctx = getCtx(); const t = ctx.currentTime;
+  [523.25,659.25,783.99,1046.5].forEach((f,i)=>{
+    playTone(f,'sine',t+i*0.07,0.28-i*0.02,0.1-i*0.01,ctx);
+  });
+  // Subtle harmony
+  playTone(392,'triangle',t,0.35,0.04,ctx);
+}
+
+// Soft neutral — nobody got it
+function playWrong(){
+  const ctx = getCtx(); const t = ctx.currentTime;
+  playTone(311.13,'sine',t,0.15,0.07,ctx);   // Eb4 — gentle minor
+  playTone(369.99,'sine',t+0.08,0.20,0.05,ctx); // F#4
+  playTone(293.66,'sine',t+0.18,0.25,0.04,ctx); // D4
+}
+
+// Reveal — soft whoosh + low note
+function playReveal(){
+  const ctx = getCtx(); const t = ctx.currentTime;
+  playTone(220,'sine',t,0.12,0.06,ctx);
+  playTone(277.18,'sine',t+0.05,0.18,0.05,ctx);
+  // Soft noise burst
+  const buf = ctx.createBuffer(1,ctx.sampleRate*0.15,ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*0.04;
+  const src = ctx.createBufferSource();
+  const gn = ctx.createGain();
+  src.buffer=buf; src.connect(gn); gn.connect(ctx.destination);
+  gn.gain.setValueAtTime(0.3,t);
+  gn.gain.exponentialRampToValueAtTime(0.0001,t+0.15);
+  src.start(t);
+}
+
+// Victory fanfare — end of game
+function playFanfare(){
+  const ctx = getCtx(); const t = ctx.currentTime;
+  const melody = [523.25,659.25,783.99,659.25,783.99,1046.5];
+  const timing = [0,0.12,0.24,0.38,0.50,0.62];
+  melody.forEach((f,i)=>{
+    playTone(f,'sine',t+timing[i],0.32,0.12,ctx);
+    playTone(f*0.5,'triangle',t+timing[i],0.32,0.04,ctx);
+  });
+}
+
+// ── CONFETTI ──────────────────────────────────────────────────
+function launchConfetti(colors){
+  const canvas = document.getElementById('confetti');
+  const ctx2 = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const pieces = [];
+  for(let i=0;i<160;i++){
+    pieces.push({
+      x: Math.random()*canvas.width,
+      y: -10 - Math.random()*200,
+      w: 8+Math.random()*6, h: 10+Math.random()*8,
+      r: Math.random()*Math.PI*2,
+      dr: (Math.random()-.5)*0.15,
+      vx: (Math.random()-.5)*3,
+      vy: 2+Math.random()*4,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      alpha: 1
+    });
+  }
+  let frame;
+  function draw(){
+    ctx2.clearRect(0,0,canvas.width,canvas.height);
+    let alive = false;
+    pieces.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.r+=p.dr; p.vy+=0.06;
+      if(p.y < canvas.height+20){ alive=true; }
+      else { p.alpha -= 0.02; }
+      if(p.alpha<=0) return;
+      ctx2.save();
+      ctx2.globalAlpha=Math.min(p.alpha,1);
+      ctx2.translate(p.x,p.y); ctx2.rotate(p.r);
+      ctx2.fillStyle=p.color;
+      ctx2.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx2.restore();
+    });
+    if(alive) frame=requestAnimationFrame(draw);
+    else ctx2.clearRect(0,0,canvas.width,canvas.height);
+  }
+  if(frame) cancelAnimationFrame(frame);
+  draw();
+}
+
+// ── OVERRIDE KEY FUNCTIONS WITH AUDIO+VISUAL ─────────────────
+const _origOpenQ = openQ;
+// Patch openQ to play select sound
+const _origOpenQInner = window.openQ;
+
+// Patch awardTeam to play correct sound + bump score
+const _baseAwardTeam = awardTeam;
+window.awardTeam = function(i){
+  playCorrect();
+  teams[i].score += currentCell.val;
+  // Animate score pill
+  setTimeout(()=>{
+    const pills = document.querySelectorAll('.team-pill');
+    if(pills[i]) pills[i].classList.add('score-bump');
+    setTimeout(()=>{ if(pills[i]) pills[i].classList.remove('score-bump'); }, 500);
+  }, 50);
+  markDone();
+};
+
+// Patch wrongQ
+const _baseWrongQ = wrongQ;
+window.wrongQ = function(){
+  playWrong();
+  markDone();
+};
+
+// Patch openQ for select sound
+window.openQ = function(cat,val){
+  playSelect();
+  const key=`${cat}|${val}`;if(usedCells[key])return;
+  currentCell={cat,val,key};
+  const[clue]=gameData[cat][val];
+  document.getElementById('modal-box').innerHTML=`
+    <div class="m-meta">
+      <span class="m-cat-badge">${cat}</span>
+      <span class="m-val-badge">$${val}</span>
+    </div>
+    <div class="m-clue-box"><div class="m-clue">${clue}</div></div>
+    <div class="modal-actions">
+      <button class="m-btn" onclick="skipQ()">Skip</button>
+      <button class="m-btn primary" onclick="revealAnswer()">Reveal response</button>
+    </div>`;
+  document.getElementById('modal').classList.remove('hidden');
+};
+
+window.revealAnswer = function(){
+  playReveal();
+  const{cat,val}=currentCell;
+  const[clue,response]=gameData[cat][val];
+  const btns=teams.map((t,i)=>`
+    <button class="award-btn" onclick="awardTeam(${i})">
+      <div class="award-dot" style="background:${t.color};box-shadow:0 0 8px ${t.color}88"></div>
+      <span class="award-name">${t.name}</span>
+      <span class="award-score">${fmt(t.score)}</span>
+    </button>`).join('');
+  document.getElementById('modal-box').innerHTML=`
+    <div class="m-meta">
+      <span class="m-cat-badge">${cat}</span>
+      <span class="m-val-badge">$${val}</span>
+    </div>
+    <div class="m-clue-box"><div class="m-clue">${clue}</div></div>
+    <div class="ans-reveal">
+      <div class="ans-lbl">Correct response</div>
+      <div class="ans-txt">${response}</div>
+    </div>
+    <div class="award-section-lbl">Award $${val} to:</div>
+    <div class="team-award-grid">${btns}</div>
+    <button class="wrong-btn" onclick="wrongQ()">Nobody got it</button>
+    <button class="skip-btn" onclick="skipQ()">Skip</button>`;
+};
+
+// Patch renderScoreboard to use new pill design
+window.renderScoreboard = function(){
+  document.getElementById('scoreboard').innerHTML=teams.map(t=>`
+    <div class="team-pill" style="border-color:${t.color}50;background:${t.color}12">
+      <span class="tp-name" style="color:${t.color}">${t.name}</span>
+      <span class="tp-score" style="color:${t.color}">${fmt(t.score)}</span>
+    </div>`).join('');
+};
+
+// Patch cell used state
+window.markDone = function(){
+  const{cat,val,key}=currentCell;
+  usedCells[key]=true;
+  document.getElementById('modal').classList.add('hidden');
+  document.querySelectorAll('.cell').forEach(c=>{
+    if(c.dataset.cat===cat&&parseInt(c.dataset.val)===val){
+      c.className='cell used';
+      c.innerHTML='<span class="cell-check">✓</span>';
+      c.onclick=null;
+    }
+  });
+  renderScoreboard();
+  if(Object.keys(usedCells).length>=selCats.slice(0,6).length*VALUES.length) endGame();
+};
+
+// Patch endGame for fanfare + confetti + polished results
+window.endGame = function(){
+  document.getElementById('modal').classList.add('hidden');
+  const sorted=[...teams].sort((a,b)=>b.score-a.score);
+  playFanfare();
+  setTimeout(()=>launchConfetti(teams.map(t=>t.color)),400);
+
+  // Podium heights
+  const hts=[120,86,64,48,40,34];
+  const medals=['🥇','🥈','🥉','4th','5th','6th'];
+  document.getElementById('podium').innerHTML=sorted.map((t,i)=>`
+    <div class="pod">
+      <div class="pod-platform" style="background:linear-gradient(160deg,${t.color}dd,${t.color}99);height:${hts[i]||32}px">
+        <div class="pod-rank-num">${medals[i]}</div>
+      </div>
+      <div class="pod-name">${t.name}</div>
+      <div class="pod-score">${fmt(t.score)}</div>
+    </div>`).join('');
+
+  document.getElementById('results-subtitle').textContent=`${sorted[0].name} takes the win!`;
+
+  document.getElementById('results-table').innerHTML=sorted.map((t,i)=>`
+    <div class="result-row">
+      <span class="result-rank">${i+1}</span>
+      <div class="result-dot" style="background:${t.color};box-shadow:0 0 6px ${t.color}88"></div>
+      <span class="result-name">${t.name}</span>
+      <span class="result-score" style="color:${t.score<0?'var(--danger)':t.color}">${fmt(t.score)}</span>
+    </div>`).join('');
+
+  showScreen('s-results');
+};
+
+// Patch cat card render to remove clue count
+window.renderCats = function(){
+  const g=document.getElementById('cat-grid');g.innerHTML='';
+  Object.entries(BANKS).forEach(([name,data])=>{
+    const c=document.createElement('div');
+    c.className='cat-card'+(selCats.includes(name)?' sel':'');
+    c.innerHTML=`<div class="ci">${data.icon}</div><div class="cn">${name}</div>`;
+    c.onclick=()=>toggleCat(name,c);
+    g.appendChild(c);
+  });
+};
+
+// Patch team pill render for setup screen
+window.renderTeams = function(){
+  const el=document.getElementById('teams-list');el.innerHTML='';
+  teams.forEach((t,i)=>{
+    const d=document.createElement('div');d.className='team-card';
+    const dots=COLORS.map((c,ci)=>`<div class="color-dot${t.color===c?' sel':''}" style="background:${c}" onclick="setColor(${i},${ci})"></div>`).join('');
+    d.innerHTML=`<div class="t-row"><input class="team-input" type="text" value="${t.name}" placeholder="Team name" oninput="setName(${i},this.value)"><button class="rm-btn" onclick="removeTeam(${i})" title="Remove">×</button></div><div class="t-row" style="flex-wrap:wrap;gap:6px">${dots}</div>`;
+    el.appendChild(d);
+  });
+};
+
+// Re-init with patched renders
+init();
+renderTeams();
+renderCats();
+updateSelInfo();
 </script>
 </body>
 </html>
